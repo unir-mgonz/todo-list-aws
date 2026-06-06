@@ -15,7 +15,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                             sh'''
-                                export $PYTHONPATH="$WORKSPACE/todo-list-aws"
+                                export PYTHONPATH="$WORKSPACE/todo-list-aws"
                                 cd $PYTHONPATH
                                 pwd
 
@@ -30,7 +30,7 @@ pipeline {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                             sh'''
-                                export $PYTHONPATH="$WORKSPACE/todo-list-aws"
+                                export PYTHONPATH="$WORKSPACE/todo-list-aws"
                                 cd $PYTHONPATH
 
                                 touch ../results-bandit.json
