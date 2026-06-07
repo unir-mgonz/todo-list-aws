@@ -6,7 +6,8 @@ pipeline {
                 sh "echo $WORKSPACE"
                 cleanWs()
                 // Clonamos repositorio
-                sh "git clone --branch master https://github.com/unir-mgonz/todo-list-aws.git"
+                sh "git clone --branch develop git@github.com:unir-mgonz/todo-list-aws.git"
+                sh "wget -O todo-list-aws/samconfig.toml https://raw.githubusercontent.com/unir-mgonz/todo-list-aws-config/refs/heads/staging/samconfig.toml"
             }
         }
         stage('Static tests') {
@@ -17,7 +18,6 @@ pipeline {
                             sh'''
                                 export PYTHONPATH="$WORKSPACE/todo-list-aws"
                                 cd $PYTHONPATH
-                                pwd
 
                                 touch ../results-flake8.txt
                                 /usr/local/bin/python/bin/python -m flake8 --exit-zero --format=pylint src/ | tee ../results-flake8.txt
@@ -40,6 +40,16 @@ pipeline {
                         recordIssues tools: [pyLint(name:'Bandit', pattern: 'results-bandit.json')]
                     }
                 }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh'''
+                    cd $WORKSPACE/todo-list-aws
+                    sam build
+                    sam validate --region us-east-1
+                    sam deploy --no-fail-on-empty-changeset --config-env staging
+                '''
             }
         }
     }
