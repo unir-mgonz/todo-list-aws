@@ -71,5 +71,17 @@ pipeline {
                 junit 'results-rest.xml'
             }
         }
+        stage('Promote') {
+            steps {
+                sh'''
+                    cd $WORKSPACE/todo-list-aws 
+                    git checkout --branch master
+                    git add -A
+                    git reset Jenkinsfile
+                    git commit -m "Promote development branch to main"
+                    git push origin master
+                '''
+            }
+        }
     }
 }
