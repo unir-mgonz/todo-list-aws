@@ -75,9 +75,14 @@ pipeline {
             steps {
                 sh'''
                     cd $WORKSPACE/todo-list-aws 
-                    git checkout -b master
-                    git add -A
-                    git reset Jenkinsfile
+                    git checkout master
+                    git pull --ff-only origin master
+                    
+                    git merge --no-ff --no-commit origin/develop
+                    git checkout --ours -- Jenkinsfile  # Escogemos la version de Jenkinsfile ya existente en master
+                    git add Jenkinsfile
+                    
+
                     git commit -m "Promote development branch to main"
                     git push origin master
                 '''
