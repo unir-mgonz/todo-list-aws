@@ -49,7 +49,26 @@ pipeline {
                     sam build
                     sam validate --region us-east-1
                     sam deploy --no-fail-on-empty-changeset --config-env staging
+                    echo $?
+
+                    # aws cloudformation describe-stacks help
+                    # Usando output json luego se pueden hacer queries con JMESPath
+                    aws cloudformation describe-stacks --stack-name todo-list-aws-staging --output text | grep BaseUrlApi | awk '{print $NF}' | tee ../BaseUrlApi.txt
                 '''
+                stash includes: 'BaseUrlApi.txt', name: 'BaseUrlApi'
+            }
+        }
+
+        stage('Rest test') {
+            steps {
+                unstash 'BaseUrlApi'
+                sh'''
+                    cd $WORKSPACE
+                    export BASE_URL=$(cat BaseUrlApi.txt)
+                    echo $BASE_URL
+                    /usr/local/bin/python/bin/python -m pytest --junitxml=results-rest.xml todo-list-aws/test/integration/todoApiTest.py
+                '''
+                junit 'results-rest.xml'
             }
         }
     }
