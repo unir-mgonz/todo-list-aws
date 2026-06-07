@@ -75,7 +75,7 @@ pipeline {
             steps {
                 sh'''
                     cd $WORKSPACE/todo-list-aws 
-                    git checkout --branch master
+                    git checkout -b master
                     git add -A
                     git reset Jenkinsfile
                     git commit -m "Promote development branch to main"
