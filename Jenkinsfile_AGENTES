@@ -1,4 +1,5 @@
 pipeline {
+    // Pipeline CI
     agent none
     stages {
         stage('Get Code') {
