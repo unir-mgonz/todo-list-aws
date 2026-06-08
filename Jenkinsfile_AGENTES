@@ -10,7 +10,7 @@ pipeline {
                 // Clonamos repositorio
                 sh "git clone --branch develop git@github.com:unir-mgonz/todo-list-aws.git"
                 sh "wget -O todo-list-aws/samconfig.toml https://raw.githubusercontent.com/unir-mgonz/todo-list-aws-config/refs/heads/staging/samconfig.toml"
-                stash includes: 'todo-list-aws/**,todo-list-aws/.*', name: 'repo'
+                stash includes: 'todo-list-aws/**,todo-list-aws/.*', name: 'repo' //Intentamos incluir los ficheros de git en el stash
             }
         }
         stage('Static tests') {
@@ -94,8 +94,9 @@ pipeline {
             agent {label 'secure'}
             steps {
                 cleanWs()
-                unstash 'repo'
+                //unstash 'repo'
                 sh "hostname"
+                sh "git clone --branch develop git@github.com:unir-mgonz/todo-list-aws.git" // No se incluye .git/ , .gitignore ni .gitattributes en el stash, por lo que volvemos a clonar para poder hacer push a master.
                 sh'''
                     cd $WORKSPACE/todo-list-aws
                     set -e
