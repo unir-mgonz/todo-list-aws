@@ -5,7 +5,7 @@ pipeline {
             agent {label 'linux'}
             steps {
                 sh "echo $WORKSPACE"
-                sh "hostname"
+                sh "hostname && whoami"
                 cleanWs()
                 // Clonamos repositorio
                 sh "git clone --branch master git@github.com:unir-mgonz/todo-list-aws.git"
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 cleanWs()
                 unstash 'repo'
-                sh "hostname"
+                sh "hostname && whoami"
                 sh'''
                     cd $WORKSPACE/todo-list-aws
                     sam build
@@ -39,6 +39,7 @@ pipeline {
             steps {
                 cleanWs()
                 unstash 'BaseUrlApi'
+                sh "hostname && whoami"
                 sh'''
                     cd $WORKSPACE
                     export BASE_URL=$(cat BaseUrlApi.txt)
