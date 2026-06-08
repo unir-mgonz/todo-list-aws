@@ -5,7 +5,7 @@ pipeline {
             agent {label 'linux'}
             steps {
                 sh "echo $WORKSPACE"
-                sh "hostname"
+                sh "hostname && whoami"
                 cleanWs()
                 // Clonamos repositorio
                 sh "git clone --branch develop git@github.com:unir-mgonz/todo-list-aws.git"
@@ -21,7 +21,7 @@ pipeline {
                         cleanWs()
                         unstash 'repo'
                         catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                            sh "hostname"
+                            sh "hostname && whoami"
                             sh'''
                                 export PYTHONPATH="$WORKSPACE/todo-list-aws"
                                 cd $PYTHONPATH
@@ -39,7 +39,7 @@ pipeline {
                         cleanWs()
                         unstash 'repo'
                         catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                            sh "hostname"
+                            sh "hostname && whoami"
                             sh'''
                                 export PYTHONPATH="$WORKSPACE/todo-list-aws"
                                 cd $PYTHONPATH
@@ -58,7 +58,7 @@ pipeline {
             steps {
                 cleanWs()
                 unstash 'repo'
-                sh "hostname"
+                sh "hostname && whoami"
                 sh'''
                     cd $WORKSPACE/todo-list-aws
                     sam build
@@ -80,7 +80,7 @@ pipeline {
                 cleanWs()
                 unstash 'repo'
                 unstash 'BaseUrlApi'
-                sh "hostname"
+                sh "hostname && whoami"
                 sh'''
                     cd $WORKSPACE
                     export BASE_URL=$(cat BaseUrlApi.txt)
@@ -95,7 +95,7 @@ pipeline {
             steps {
                 cleanWs()
                 //unstash 'repo'
-                sh "hostname"
+                sh "hostname && whoami"
                 sh "git clone --branch develop git@github.com:unir-mgonz/todo-list-aws.git" // No se incluye .git/ , .gitignore ni .gitattributes en el stash, por lo que volvemos a clonar para poder hacer push a master.
                 sh'''
                     cd $WORKSPACE/todo-list-aws
