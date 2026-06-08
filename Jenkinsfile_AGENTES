@@ -10,7 +10,7 @@ pipeline {
                 // Clonamos repositorio
                 sh "git clone --branch develop git@github.com:unir-mgonz/todo-list-aws.git"
                 sh "wget -O todo-list-aws/samconfig.toml https://raw.githubusercontent.com/unir-mgonz/todo-list-aws-config/refs/heads/staging/samconfig.toml"
-                stash includes: 'todo-list-aws/**', name: 'repo'
+                stash includes: 'todo-list-aws/**,todo-list-aws/.*', name: 'repo'
             }
         }
         stage('Static tests') {
