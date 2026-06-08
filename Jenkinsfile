@@ -74,17 +74,22 @@ pipeline {
         stage('Promote') {
             steps {
                 sh'''
-                    cd $WORKSPACE/todo-list-aws 
+                    cd $WORKSPACE/todo-list-aws
+                    set -e
+                    
+                    git fetch origin 
                     git checkout master
-                    git pull --ff-only origin master
+                    git pull origin master
                     
-                    git merge --no-ff --no-commit origin/develop
-                    git checkout --ours -- Jenkinsfile  # Escogemos la version de Jenkinsfile ya existente en master
+                    git merge origin/develop --no-commit --no-ff || true
+
+                    git checkout origin/master --ours -- Jenkinsfile # Escogemos la version de Jenkinsfile ya existente en master
                     git add Jenkinsfile
-                    
 
                     git commit -m "Promote development branch to main"
-                    git push origin master
+
+
+                    git push git@github.com:unir-mgonz/todo-list-aws.git master
                 '''
             }
         }
