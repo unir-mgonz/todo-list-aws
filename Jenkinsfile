@@ -83,7 +83,7 @@ pipeline {
                     
                     git merge origin/develop --no-commit --no-ff || true
 
-                    git checkout origin/master --ours -- Jenkinsfile # Escogemos la version de Jenkinsfile ya existente en master
+                    git checkout origin/master -- Jenkinsfile # Escogemos la version de Jenkinsfile ya existente en master
                     git add Jenkinsfile
 
                     git commit -m "Promote development branch to main"
